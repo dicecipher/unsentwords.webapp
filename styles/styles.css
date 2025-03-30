@@ -47,3 +47,11 @@ header {
 .red-heart {
     color: red;
 }
+
+.text-muted {
+    color: #6c757d; /* Default muted text color */
+}
+
+.exceeded {
+    color: red; /* Turns red when limit is reached */
+}
