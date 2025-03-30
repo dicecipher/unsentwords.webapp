@@ -25,3 +25,25 @@ header {
     }
 }
 
+.bold-text {
+    font-weight: 500;
+}
+
+.card-text {
+    text-align: justify;
+}
+
+.react-count {
+    margin: 0;
+    padding: 0;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.heart {
+    cursor: pointer;
+    transition: color 0.3s ease-in-out;
+}
+.red-heart {
+    color: red;
+}
