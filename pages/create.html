@@ -25,12 +25,12 @@
                     <form id="messageForm">
                         <label for="recipient" class="form-label fw-semibold">Recipient</label>
                         <input type="text" id="recipient" class="form-control" maxlength="32" required>
-                        <small id="recipientCounter" class="text-muted">0 / 32 characters</small> 
+                        <small id="recipientCounter" class="text-muted exceeded">0 / 32 characters</small> 
                     
                         <div class="mb-3 mt-3">
                             <label for="message" class="form-label fw-semibold">Your Message</label>
                             <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
-                            <small id="messageCounter" class="text-muted">0 / 500 characters</small>
+                            <small id="messageCounter" class="text-muted exceeded">0 / 500 characters</small>
                         </div>
                         
                         <button type="submit" class="btn btn-dark">Submit</button>
