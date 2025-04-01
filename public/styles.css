@@ -1,3 +1,17 @@
+html, body {
+    height: 100%; 
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1; 
+}
+
+footer {
+    text-align: center;
+    padding: 10px 0;
+}
 
 header {
     display: grid;
@@ -49,9 +63,15 @@ header {
 }
 
 .text-muted {
-    color: #6c757d; /* Default muted text color */
+    color: #6c757d; 
 }
 
 .exceeded {
-    color: red; /* Turns red when limit is reached */
+    color: red; 
+}
+#messagesContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    justify-content: center;
 }
