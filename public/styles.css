@@ -23,7 +23,7 @@ header {
     }
     .typewriter {
         text-align: center;
-        font-family: 'IM Fell DW Pica', serif;
+        font-family: 'IM Fell DW Pica';
         font-size: 64px;
         color: #333;
         white-space: nowrap;
@@ -32,7 +32,7 @@ header {
     }
 
     p {
-        font-family: 'IM Fell DW Pica', serif;
+        font-family: 'IM Fell DW Pica';
         font-size: 20px;
         color: #333;
         text-align: center;
@@ -74,4 +74,8 @@ header {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
     justify-content: center;
+}
+
+.message {
+    font-family: 'IM Fell DW Pica';
 }
