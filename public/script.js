@@ -1,8 +1,10 @@
-import firebaseConfig from "./config.js";
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
 import { 
     getFirestore, collection, addDoc, getDocs, query, where, Timestamp 
 } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+import firebaseConfig from "./config.js"; // Import your Firebase configuration
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -19,7 +21,7 @@ const messageCounter = document.getElementById("messageCounter");
 const recipientCounter = document.getElementById("recipientCounter");
 
 // Character Limits
-const MAX_MESSAGE_LENGTH = 500;
+const MAX_MESSAGE_LENGTH = 300;
 const MAX_RECIPIENT_LENGTH = 32;
 
 // 🛠 Update Character Counter Function
@@ -78,22 +80,30 @@ function createMessageCard(data) {
             month: "long", day: "numeric", year: "numeric" 
         });
     }
-
+    function getRandomVeryLightColor() {
+        const r = Math.floor(Math.random() * 100 + 155); 
+        const g = Math.floor(Math.random() * 100 + 155); 
+        const b = Math.floor(Math.random() * 100 + 155);
+        const alpha = 0.2; 
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+    
     messageCard.innerHTML = `
-    <div class="card border-dark h-100" style="height: 100%;">
-        <div class="w-100 h-100 d-flex flex-column">
-            <div class="card-header text-start fw-semibold">
-                To: ${data.recipient}
-            </div>
-            <div class="card-body flex-grow-1">
-                <p class="card-text">${data.message}</p>
-            </div>
-            <div class="card-footer text-body-secondary">
-                ${date}
+        <div class="h-100 card apple-card" style="background-color: ${getRandomVeryLightColor()}">
+            <div class="h-100 w-100 d-flex flex-column">
+                <div class="text-start fw-semibold card-header apple-header">
+                    To: ${data.recipient}
+                </div>
+                <div class="card-body apple-body">
+                    <p class="card-text">${data.message}</p>
+                </div>
+                <div class="card-footer apple-footer">
+                    ${date}
+                </div>
             </div>
         </div>
-    </div>
     `;
+    
 
     return messageCard;
 }
@@ -158,10 +168,12 @@ if (messageForm) {
 
         try {
             await addDoc(collection(db, "messages"), {
-                recipient,
-                message,
-                datePosted: Timestamp.now()
+                recipient: recipientInput.value,
+                recipient_lower: recipientInput.value.toLowerCase(), // 🔽 Add this
+                message: messageInput.value,
+                datePosted: Timestamp.now(),
             });
+            
 
             alert("Message added successfully!");
             resetForm(); // Reset fields and counters
@@ -174,22 +186,20 @@ if (messageForm) {
 }
 
 // 🛠 Search Messages by Recipient
-import { query, where } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
 
 async function searchMessages() {
-    const recipientName = searchInput.value.trim();
+    const recipientName = searchInput.value.trim().toLowerCase(); // 🔽 Convert input to lowercase
 
     if (recipientName === "") {
-        loadMessages(); // Reload all messages if search is empty
+        loadMessages();
         return;
     }
 
     try {
         const messagesRef = collection(db, "messages");
-        const q = query(messagesRef, where("recipient", "==", recipientName)); // Firestore query
+        const q = query(messagesRef, where("recipient_lower", "==", recipientName)); // 🔽 Query the lowercase field
 
         const querySnapshot = await getDocs(q);
-
         console.log("Filtered messages found:", querySnapshot.size);
 
         displayMessages(querySnapshot);
@@ -231,5 +241,75 @@ document.addEventListener("DOMContentLoaded", function () {
         loadMessages();
     } else {
         console.error("❌ messagesContainer not found in the DOM");
+    }
+});
+// 🛠 Load Messages of the Day - Only Display 8 Random Messages Created Today
+async function loadMessagesOfTheDay() {
+    try {
+        console.log("Fetching today's messages for Messages of the Day...");
+
+        // Get today's start and tomorrow's start timestamps
+        const now = new Date();
+        const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+        const startOfTodayTimestamp = Timestamp.fromDate(startOfToday);
+        const endOfTodayTimestamp = Timestamp.fromDate(endOfToday);
+
+        // Query messages created today
+        const messagesRef = collection(db, "messages");
+        const q = query(
+            messagesRef,
+            where("datePosted", ">=", startOfTodayTimestamp),
+            where("datePosted", "<", endOfTodayTimestamp)
+        );
+        const querySnapshot = await getDocs(q);
+
+        // Convert querySnapshot to an array and randomize the order
+        let docsArray = querySnapshot.docs;
+        docsArray.sort(() => Math.random() - 0.5);
+
+        // Limit to 8 messages
+        const selectedDocs = docsArray.slice(0, 8);
+
+        // Get the container for Messages of the Day
+        const messagesOfTheDayContainer = document.getElementById("messagesOfTheDay");
+        if (!messagesOfTheDayContainer) {
+            console.error("messagesOfTheDay container not found in the DOM.");
+            return;
+        }
+        messagesOfTheDayContainer.innerHTML = "";
+
+        // Display a message if no documents are found
+        if (selectedDocs.length === 0) {
+            messagesOfTheDayContainer.innerHTML = "<p class='text-muted'>No messages found for today.</p>";
+            return;
+        }
+
+        // Create and append message cards for each selected document
+        selectedDocs.forEach((doc) => {
+            const data = doc.data();
+            const messageCard = createMessageCard(data);
+            messagesOfTheDayContainer.appendChild(messageCard);
+        });
+    } catch (error) {
+        console.error("Error loading messages of the day:", error);
+        document.getElementById("messagesOfTheDay").innerHTML = "<p class='text-danger'>Error loading messages of the day.</p>";
+    }
+}
+
+// 🛠 Initialize on Page Load for Messages of the Day
+document.addEventListener("DOMContentLoaded", function () {
+    // Load messages for the main container
+    if (document.getElementById("messagesContainer")) {
+        loadMessages();
+    } else {
+        console.error("❌ messagesContainer not found in the DOM");
+    }
+    
+    // Load today's messages (8 random messages) for the Messages of the Day section
+    if (document.getElementById("messagesOfTheDay")) {
+        loadMessagesOfTheDay();
+    } else {
+        console.error("❌ messagesOfTheDay not found in the DOM");
     }
 });
