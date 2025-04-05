@@ -78,4 +78,14 @@ header {
 
 .message {
     font-family: 'IM Fell DW Pica';
+    margin: 0;
+    padding-top: 20px;
+    padding-bottom: 30px;
+}
+
+#messagesOfTheDay {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    justify-content: center;
 }
