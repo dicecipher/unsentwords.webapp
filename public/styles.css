@@ -1,5 +1,21 @@
+@font-face {
+    font-family: 'IM Fell DW Pica';
+    src:url('fonts/IMFellDWPica-Regular.ttf') format('truetype'),
+         url('fonts/IMFellDWPica-Italic.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  
+  @font-face {
+    font-family: 'IM Fell DW Pica SW';
+    src:  url('fonts/IMFellDWPica-Italic.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+  }
+
 html, body {
-    height: 100%; 
     display: flex;
     flex-direction: column;
 }
@@ -23,7 +39,7 @@ header {
     }
     .typewriter {
         text-align: center;
-        font-family: 'IM Fell DW Pica';
+        font-family: 'IM Fell DW Pica SW', serif !important;
         font-size: 64px;
         color: #333;
         white-space: nowrap;
@@ -32,7 +48,7 @@ header {
     }
 
     p {
-        font-family: 'IM Fell DW Pica';
+        font-family: 'IM Fell DW Pica', serif !important;
         font-size: 20px;
         color: #333;
         text-align: center;
@@ -77,15 +93,66 @@ header {
 }
 
 .message {
-    font-family: 'IM Fell DW Pica';
+    font-family: 'IM Fell DW Pica SW', serif !important;
     margin: 0;
-    padding-top: 20px;
-    padding-bottom: 30px;
+    font-size: 40px !important;
+    padding-top: 10px !important;
+    padding-bottom: 25px !important;
 }
 
 #messagesOfTheDay {
-    display: grid;
+    display: grid !important;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
     justify-content: center;
+}
+
+@media (max-width: 768px) {
+    header .typewriter {
+        font-family: 'IM Fell DW Pica SW', serif !important;
+        font-size: 40px;
+    }
+
+    header p {
+        font-family: 'IM Fell DW Pica', serif !important;
+        font-size: 16px;
+    }
+
+    .card-text {
+        font-size: 14px;
+    }
+
+    .react-count {
+        font-size: 13px;
+    }
+
+    .message {
+        font-family: 'IM Fell DW Pica SW', serif !important;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    header .typewriter {
+        font-family: 'IM Fell DW Pica SW', serif !important;
+        font-size: 50px;
+    }
+
+    header p {
+        font-family: 'IM Fell DW Pica', serif !important;
+        font-size: 14px;
+    }
+
+    .card-text {
+        font-size: 13px;
+    }
+
+    .react-count {
+        font-size: 12px;
+    }
+
+    .message {
+        font-family: 'IM Fell DW Pica SW', serif !important;
+        font-size: 25px;
+    }
 }
